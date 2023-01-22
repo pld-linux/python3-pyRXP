@@ -1,27 +1,26 @@
 # TODO:
 # - use external rxp
-# - make documentation from rml file instead of downloading it
-#   (need for spec for http://www.reportlab.org/rl_toolkit.html)
 #
+# Conditional build:
+%bcond_without	tests	# unit tests
 
 Summary:	A Python wrapper for the RXP parser
 Summary(pl.UTF-8):	Pythonowy interfejs do analizatora XML RXP
 Name:		python-pyRXP
-# keep 2.x here for python2 support; no accessible sdist found for 2.2.1 or 2.2.3
-Version:	2.2.0
+Version:	3.0.1
 Release:	1
 License:	GPL v2
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/pyRXP/
 Source0:	https://files.pythonhosted.org/packages/source/p/pyRXP/pyRXP-%{version}.tar.gz
-# Source0-md5:	97a826803521fd8fade6e2ea3ec0827f
+# Source0-md5:	3942f6c321f34d25b3d951b01b4e79d8
 URL:		https://pypi.org/project/pyRXP/
-BuildRequires:	python-devel >= 1:2.7
+BuildRequires:	python3-devel >= 1:3.6
+BuildRequires:	python3-setuptools
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
-Requires:	python-modules >= 1:2.7
-Obsoletes:	python-pyRXP-examples < 2
+Requires:	python3-modules >= 1:3.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -48,16 +47,18 @@ Pakiet zawierający dokumentację dla modułu Pythona pyRXP.
 %prep
 %setup -q -n pyRXP-%{version}
 
-# missing in sdist
-touch LICENSE.txt
-
 %build
-%py_build
+%py3_build
+
+%if %{with tests}
+PYTHONPATH=$(readlink -f build-3/lib.*) \
+%{__python3} test/runAll.py
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%py_install
+%py3_install
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -65,8 +66,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README.rst
-%attr(755,root,root) %{py_sitedir}/pyRXPU.so
-%{py_sitedir}/pyRXP-%{version}-py*.egg-info
+%attr(755,root,root) %{py3_sitedir}/pyRXPU.cpython-*.so
+%{py3_sitedir}/pyRXP-%{version}-py*.egg-info
 
 %files doc
 %defattr(644,root,root,755)
