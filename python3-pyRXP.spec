@@ -8,7 +8,7 @@ Summary:	A Python wrapper for the RXP parser
 Summary(pl.UTF-8):	Pythonowy interfejs do analizatora XML RXP
 Name:		python3-pyRXP
 Version:	3.0.1
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/pyRXP/
